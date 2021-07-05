@@ -1056,8 +1056,22 @@ array[i]        __getitem__
 obj.attr = x    __setattr__
 obj.attr        __getattr__
 # be careful ! theres also a one called __getattribute__ which works mostly, unlike __getattr__
-
 if please_ignore_this_it_simply_fixes_colors_belew_on_subim : pass
+
+class my_array:
+    def __setitem__(self, *args): # better these generic ones, these should work for slicing as well
+        self._array.__setitem__(*args)
+    
+    def __getitem__(self, *args):
+        return self._array.__getitem__(*args)
+    
+    def __len__(self):
+        return len(self._array)
+
+this way you can even use it in foreach loops!
+(for x in <instance of my_array>)
+
+
 # EXAMPLE: ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 class Building(object):
     def __init__(self, floors):
@@ -1066,6 +1080,7 @@ class Building(object):
         self._floors[floor_number] = data
     def __getitem__(self, floor_number):
         return self._floors[floor_number]
+
 
 building1 = Building(4) # Construct a building with 4 floors
 building1[0] = 'Reception'
